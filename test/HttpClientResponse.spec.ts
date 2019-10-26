@@ -1,8 +1,20 @@
 import nock from 'nock'
-import moment from 'moment'
 import request from 'request'
 import got from 'got'
+
+import { performance } from 'perf_hooks'
 import { HttpClientBuilder, HttpClientInterceptors, HttpClientRetryStrategy } from '../src'
+
+const moment: () => {
+  time:number,
+  diff: (compareTo:{time:number}, unit:string) => number
+} = () => {
+  const time = performance.now();
+  return {
+    time,
+    diff: (compareTo, unit) => ~~((time - compareTo.time) / (unit === 'seconds' ? 1000 : 1))
+  }
+};
 
 describe('HttpClientResponse', () => {
   beforeEach(() => {
